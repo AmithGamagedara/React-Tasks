@@ -23,7 +23,7 @@ function SearchBar({ onSubmit }) {
           placeholder="Search your image here"
           className="py-1.5 px-2 border rounded w-1/3 ml-4"
         />
-        <button className="bg-gray-800 py-1.5 px-4 text-white ml-2 rounded">search</button>
+        <button className="bg-[#121212] py-1.5 px-4 text-white ml-2 rounded">search</button>
       </form>
     </div>
   );
