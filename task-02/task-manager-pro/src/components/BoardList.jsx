@@ -12,7 +12,7 @@ function BoardList() {
         {boards.map((board) => (
           <Col span={8} key={board.id}>
             <Link to={`/boards/${board.id}`}>
-              <Card title={board.name} variant="borderless">
+              <Card title={board.name} hoverable>
                 {board.description}
               </Card>
             </Link>
