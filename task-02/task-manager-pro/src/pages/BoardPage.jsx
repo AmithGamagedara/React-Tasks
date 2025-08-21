@@ -57,8 +57,17 @@ function BoardPage() {
     setBoardState({ ...boardState, lists: updatedLists });
   };
 
- 
-
+  const handleDeleteTask = (listId, taskId) => {
+    const updatedLists = boardState.lists.map((list) =>
+      list.id === listId
+        ? {
+            ...list,
+            tasks: list.tasks.filter((task) => task.id !== taskId),
+          }
+        : list
+    );
+    setBoardState({ ...boardState, lists: updatedLists });
+  };
 
   return (
     <div style={{ padding: "20px" }}>
@@ -86,7 +95,12 @@ function BoardPage() {
                   }}
                   extra={
                     <div>
-                    <a onClick={() => handleEditTask(list.id, task.id)}>edit</a>
+                      <a onClick={() => handleEditTask(list.id, task.id)}>
+                        edit
+                      </a>
+                      <a onClick={() => handleDeleteTask(list.id, task.id)}>
+                        delete
+                      </a>
                     </div>
                   }
                 >
