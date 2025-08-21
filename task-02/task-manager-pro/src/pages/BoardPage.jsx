@@ -1,50 +1,73 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Row, Col, Card } from "antd";
+import { Row, Col, Card, Button } from "antd";
+import { boards } from "../boards";
 
 function BoardPage() {
   const { id } = useParams();
+  const board = boards.find((b) => b.id === id);
 
-  const boards = [
-    { id: 1, name: "Personal Tasks", description: "Groceries, workouts" },
-    { id: 2, name: "Team Board", description: "Sprint backlog" },
-    { id: 3, name: "Personal", description: "workouts" },
-    { id: 4, name: "Team ", description: "Sprint" },
-  ];
+  const [boardState, setBoardState] = useState(board);
 
-  const board = boards.find((b) => b.id === Number(id));
+  const handleAddTask = (listId) => {
+    const title = prompt("Enter task title:");
+    if (!title) return;
 
-  const tasks = [
-    { id: 1, title: "Buy groceries", listId: "todo" },
-    { id: 2, title: "Team meeting", listId: "inprogress" },
-    { id: 3, title: "Finish project report", listId: "done" },
-  ];
+    const newTask = {
+      id: "t" + new Date().getTime(),
+      title,
+    };
 
-  const lists = [
-    { id: "todo", name: "To Do" },
-    { id: "inprogress", name: "In Progress" },
-    { id: "done", name: "Done" },
-  ];
+    const updatedLists = boardState.lists.map((list) => {
+      if (list.id === listId) {
+        return {
+          ...list,
+          tasks: [...list.tasks, newTask],
+        };
+      }
+      return list;
+    });
+
+    setBoardState({ ...boardState, lists: updatedLists });
+  };
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2>{board ? board.name : "Board not found"}</h2>
-      <p>{board?.description}</p>
+      <h2>{boardState ? boardState.name : "Board not found"}</h2>
+      <p>{boardState?.description}</p>
       <Row gutter={16}>
-        {lists.map((list) => (
-          <Col span={8} key={list.id}>
-            <Card title={list.name} style={{ minHeight: "300px" }}>
-              {tasks
-                .filter((task) => task.listId === list.id)
-                .map((task) => (
-                  <Card
-                    key={task.id}
-                    size="small"
-                    style={{ marginBottom: "8px" }}
-                  >
-                    {task.title}
-                  </Card>
-                ))}
+        {boardState.lists.map((list) => (
+          <Col xs={24} sm={12} md={6} key={list.id}>
+            <Card
+              title={list.title}
+              style={{
+                minHeight: "300px",
+                backgroundColor: "#f8f8f8",
+
+                marginBottom: "24px",
+              }}
+              variant="borderless"
+            >
+              {list.tasks.map((task) => (
+                <Card
+                  key={task.id}
+                  size="small"
+                  style={{
+                    marginBottom: "8px",
+                    border: "1px solid #ebebeb",
+                  }}
+                >
+                  {task.title}
+                </Card>
+              ))}
+
+              <Button
+                type="dashed"
+                onClick={() => handleAddTask(list.id)}
+                style={{ marginTop: "16px", width: "100%" }}
+              >
+                + Add Task
+              </Button>
             </Card>
           </Col>
         ))}
