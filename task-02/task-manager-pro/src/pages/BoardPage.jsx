@@ -13,9 +13,13 @@ function BoardPage() {
     const title = prompt("Enter task title:");
     if (!title) return;
 
+    const description = prompt("Enter task description:");
+    if (!description) return;
+
     const newTask = {
       id: "t" + new Date().getTime(),
       title,
+      description,
     };
 
     const updatedLists = boardState.lists.map((list) => {
@@ -31,6 +35,31 @@ function BoardPage() {
     setBoardState({ ...boardState, lists: updatedLists });
   };
 
+  const handleEditTask = (listId, taskId) => {
+    const newTitle = prompt("Enter new title");
+    if (!newTitle) return;
+
+    const newDescription = prompt("Enter new description");
+    if (!newDescription) return;
+
+    const updatedLists = boardState.lists.map((list) =>
+      list.id === listId
+        ? {
+            ...list,
+            tasks: list.tasks.map((task) =>
+              task.id === taskId
+                ? { ...task, title: newTitle, description: newDescription }
+                : task
+            ),
+          }
+        : list
+    );
+    setBoardState({ ...boardState, lists: updatedLists });
+  };
+
+ 
+
+
   return (
     <div style={{ padding: "20px" }}>
       <h2>{boardState ? boardState.name : "Board not found"}</h2>
@@ -41,9 +70,8 @@ function BoardPage() {
             <Card
               title={list.title}
               style={{
-                minHeight: "300px",
+                minHeight: "180px",
                 backgroundColor: "#f8f8f8",
-
                 marginBottom: "24px",
               }}
               variant="borderless"
@@ -56,15 +84,30 @@ function BoardPage() {
                     marginBottom: "8px",
                     border: "1px solid #ebebeb",
                   }}
+                  extra={
+                    <div>
+                    <a onClick={() => handleEditTask(list.id, task.id)}>edit</a>
+                    </div>
+                  }
                 >
-                  {task.title}
+                  <div style={{ fontSize: "16px", fontWeight: 600 }}>
+                    {" "}
+                    {task.title}
+                  </div>
+                  <div style={{ fontSize: "13px", color: "#666" }}>
+                    {task.description}
+                  </div>
                 </Card>
               ))}
 
               <Button
                 type="dashed"
                 onClick={() => handleAddTask(list.id)}
-                style={{ marginTop: "16px", width: "100%" }}
+                style={{
+                  marginTop: "16px",
+                  width: "100%",
+                  backgroundColor: "#ececec",
+                }}
               >
                 + Add Task
               </Button>
