@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Row, Col } from "antd";
 import { Link } from "react-router-dom";
-import { boards } from "../boards";
+import { boards } from "../helper/boards";
 
 function BoardList() {
   
