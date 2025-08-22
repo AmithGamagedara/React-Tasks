@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import {
   getBoard,
   getLists,
@@ -7,22 +7,26 @@ import {
   updateTask,
   deleteTask,
 } from "../api/boardApi";
+import { boardReducer, initialState } from "../reducers/boardReducer";
 
 function useBoardApi(boardId) {
-  const [board, setBoard] = useState(null);
-  const [lists, setLists] = useState([]);
-  const [tasks, setTasks] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [state, dispatch] = useReducer(boardReducer, initialState);
 
   useEffect(() => {
     if (!boardId) return;
-    setLoading(true);
 
-     getBoard(boardId).then(res => setBoard(res.data));
+    dispatch({ type: "SET_LOADING", payload: true });
 
+    //board fetch
+    getBoard(boardId).then((res) =>
+      dispatch({ type: "SET_BOARD", payload: res.data })
+    );
+
+    //lists n tasks fetch
     getLists(boardId).then((res) => {
-      setLists(res.data);
+      dispatch({ type: "SET_LISTS", payload: res.data });
       // Fetch tasks for each list
+
       Promise.all(
         res.data.map((list) =>
           getTasks(list.id).then((taskRes) => [list.id, taskRes.data])
@@ -32,46 +36,34 @@ function useBoardApi(boardId) {
         taskEntries.forEach(([listId, tasks]) => {
           tasksObj[listId] = tasks;
         });
-        setTasks(tasksObj);
-        setLoading(false);
+        dispatch({ type: "SET_TASKS", payload: tasksObj });
       });
     });
   }, [boardId]);
 
   // Add a new task to list
   const insertTask = async (listId, taskData) => {
-    const res = await addTask({...taskData, listId});
-    setTasks((prev) => ({
-      ...prev,
-      [listId]: [...(prev[listId] || []), res.data],
-    }));
+    const res = await addTask({ ...taskData, listId });
+    dispatch({ type: "ADD_TASK", payload: { listId, task: res.data } });
   };
 
   // Update a task in list
   const updateTaskList = async (listId, taskId, updatedData) => {
     const res = await updateTask(taskId, updatedData);
-    setTasks((prev) => ({
-      ...prev,
-      [listId]: prev[listId].map((task) =>
-        task.id === taskId ? res.data : task
-      ),
-    }));
+    dispatch({
+      type: "UPDATE_TASK",
+      payload: { listId, taskId, updatedTask: res.data },
+    });
   };
 
   // Delete a task from list
   const deleteTaskList = async (listId, taskId) => {
     await deleteTask(taskId);
-    setTasks((prev) => ({
-      ...prev,
-      [listId]: prev[listId].filter((task) => task.id !== taskId),
-    }));
+    dispatch({ type: "DELETE_TASK", payload: { listId, taskId } });
   };
 
   return {
-    board,
-    lists,
-    tasks,
-    loading,
+    ...state,
     insertTask,
     updateTaskList,
     deleteTaskList,
