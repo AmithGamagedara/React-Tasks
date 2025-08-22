@@ -2,13 +2,16 @@ import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import RoutesPage from "./routes/routes";
 import Header from "./components/Header/Header";
+import { FavoritesProvider } from "./context/FavoriteContext";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Header />
-      <RoutesPage />
-    </BrowserRouter>
+    <FavoritesProvider>
+      <BrowserRouter>
+        <Header />
+        <RoutesPage />
+      </BrowserRouter>
+    </FavoritesProvider>
   );
 }
 
