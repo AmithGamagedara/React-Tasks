@@ -4,6 +4,8 @@ import { Row, Col, Card, Button, Spin, Divider, Typography } from "antd";
 import useBoardApi from "../../hooks/useBoardApi";
 import { useFavorites } from "../../context/useFavorites";
 import TaskList from "../../components/Tasks/TaskList";
+import EditTaskModal from "../../components/Modal/EditTaskModal";
+import { useState } from "react";
 // import { boards } from "../../helper/boards";
 
 const { Title, Paragraph } = Typography;
@@ -12,6 +14,11 @@ function BoardPage() {
   const { id } = useParams();
   // const board = boards.find((b) => b.id === id);
   const { favorites, toggleFavorite } = useFavorites();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
+  const [editingListId, setEditingListId] = useState(null);
+  const [addingListId, setAddingListId] = useState(null);
 
   // const [boardState, setBoardState] = useState(board);
   const {
@@ -27,30 +34,55 @@ function BoardPage() {
   if (loading) return <Spin />;
 
   //insert
-  const handleAddTask = (listId) => {
-    const title = prompt("Enter task title:");
-    if (!title) return;
 
-    const description = prompt("Enter task description:");
-    if (!description) return;
+  const handleOpenAddModal = (listId) => {
+  setEditingTask(null);  // no existing task
+  setAddingListId(listId);
+  setIsModalOpen(true);
+};
 
-    insertTask(listId, { title, description });
-  };
+  // const handleAddTask = (listId) => {
+  //   const title = prompt("Enter task title:");
+  //   if (!title) return;
 
-  //update
+  //   const description = prompt("Enter task description:");
+  //   if (!description) return;
+
+  //   insertTask(listId, { title, description });
+  // };
+
+
+  
+
+  //edit
+
   const handleEditTask = (listId, task) => {
-    const newTitle = prompt("Enter new title", task.title);
-    if (!newTitle) return;
-
-    const newDescription = prompt("Enter new description", task.description);
-    if (!newDescription) return;
-
-    updateTaskList(listId, task.id, {
-      ...task,
-      title: newTitle,
-      description: newDescription,
-    });
+    setEditingTask(task);
+    setEditingListId(listId);
+    setIsModalOpen(true);
   };
+
+  const handleSaveTask = (task) => {
+  if (editingTask) {
+   
+    updateTaskList(editingListId, task.id, task);
+  } else {
+    insertTask(addingListId, task);
+  }
+};
+  // const handleEditTask = (listId, task) => {
+  //   const newTitle = prompt("Enter new title", task.title);
+  //   if (!newTitle) return;
+
+  //   const newDescription = prompt("Enter new description", task.description);
+  //   if (!newDescription) return;
+
+  //   updateTaskList(listId, task.id, {
+  //     ...task,
+  //     title: newTitle,
+  //     description: newDescription,
+  //   });
+  // };
 
   //delete
   const handleDeleteTask = (listId, taskId) => {
@@ -72,13 +104,19 @@ function BoardPage() {
               tasks={tasks}
               favorites={favorites}
               toggleFavorite={toggleFavorite}
-              onAdd={handleAddTask}
+              onAdd={handleOpenAddModal}
               onEdit={handleEditTask}
               onDelete={handleDeleteTask}
             />
           </Col>
         ))}
       </Row>
+      <EditTaskModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        task={editingTask}
+        onSave={handleSaveTask}
+      />
     </div>
   );
 }
