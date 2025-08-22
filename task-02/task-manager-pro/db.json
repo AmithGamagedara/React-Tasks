@@ -1,0 +1,166 @@
+{
+  "boards": [
+    {
+      "id": "1",
+      "name": "Personal Tasks",
+      "description": "My personal to-do board"
+    },
+    {
+      "id": "2",
+      "name": "Team Board",
+      "description": "Tasks for the project team"
+    }
+  ],
+  "lists": [
+    {
+      "id": "todo1",
+      "boardId": "1",
+      "title": "To Do"
+    },
+    {
+      "id": "inprogress1",
+      "boardId": "1",
+      "title": "In Progress"
+    },
+    {
+      "id": "done1",
+      "boardId": "1",
+      "title": "Done"
+    },
+    {
+      "id": "review1",
+      "boardId": "1",
+      "title": "Review"
+    },
+    {
+      "id": "todo2",
+      "boardId": "2",
+      "title": "To Do"
+    },
+    {
+      "id": "inprogress2",
+      "boardId": "2",
+      "title": "In Progress"
+    },
+    {
+      "id": "done2",
+      "boardId": "2",
+      "title": "Done"
+    },
+    {
+      "id": "review2",
+      "boardId": "2",
+      "title": "Review"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "t1",
+      "listId": "todo1",
+      "title": "Buy groceries",
+      "description": "Milk, eggs, bread, fruits"
+    },
+    {
+      "id": "t2",
+      "listId": "todo1",
+      "title": "Finish assignment",
+      "description": "Complete React homework"
+    },
+    {
+      "id": "t8",
+      "listId": "todo1",
+      "title": "Clean room",
+      "description": "Organize desk and wardrobe"
+    },
+    {
+      "id": "t9",
+      "listId": "todo1",
+      "title": "Read a book",
+      "description": "At least 20 pages of Atomic Habits"
+    },
+    {
+      "id": "t3",
+      "listId": "inprogress1",
+      "title": "Learn React Router",
+      "description": "Follow tutorial and practice"
+    },
+    {
+      "id": "t10",
+      "listId": "inprogress1",
+      "title": "Build portfolio website",
+      "description": "Create using React + Tailwind"
+    },
+    {
+      "id": "t4",
+      "listId": "done1",
+      "title": "Morning workout",
+      "description": "30 minutes cardio"
+    },
+    {
+      "id": "t11",
+      "listId": "done1",
+      "title": "Wash clothes",
+      "description": "Laundry finished in the morning"
+    },
+    {
+      "id": "t7",
+      "listId": "review1",
+      "title": "Code review PR #12",
+      "description": "Check new feature branch"
+    },
+    {
+      "id": "t12",
+      "listId": "review1",
+      "title": "Check grocery list",
+      "description": "Confirm all items are bought"
+    },
+    {
+      "id": "t5",
+      "listId": "todo2",
+      "title": "Plan sprint",
+      "description": "Outline goals for sprint 12"
+    },
+    {
+      "id": "t13",
+      "listId": "todo2",
+      "title": "Design login page",
+      "description": "Create UI mockup in Figma"
+    },
+    {
+      "id": "t14",
+      "listId": "todo2",
+      "title": "Prepare presentation",
+      "description": "Slides for client demo"
+    },
+    {
+      "id": "t6",
+      "listId": "inprogress2",
+      "title": "Fix login bug",
+      "description": "Debug API response issue"
+    },
+    {
+      "id": "t15",
+      "listId": "inprogress2",
+      "title": "Integrate payment gateway",
+      "description": "Work on Stripe integration"
+    },
+    {
+      "id": "t16",
+      "listId": "done2",
+      "title": "Setup project repo",
+      "description": "Created GitHub repo with README"
+    },
+    {
+      "id": "t17",
+      "listId": "done2",
+      "title": "Team meeting",
+      "description": "Weekly sync-up completed"
+    },
+    {
+      "id": "t7",
+      "listId": "review2",
+      "title": "Code review PR #12",
+      "description": "Review team member's PR"
+    }
+  ]
+}

@@ -1,15 +1,27 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import { Row, Col, Card, Button } from "antd";
-import { boards } from "../../boards";
 import "./BoardPage.scss";
+import { useParams } from "react-router-dom";
+import { Row, Col, Card, Button, Spin } from "antd";
+import useBoardApi from "../../hooks/useBoardApi";
+// import { boards } from "../../helper/boards";
 
 function BoardPage() {
   const { id } = useParams();
-  const board = boards.find((b) => b.id === id);
+  // const board = boards.find((b) => b.id === id);
 
-  const [boardState, setBoardState] = useState(board);
+  // const [boardState, setBoardState] = useState(board);
+  const {
+    board,
+    lists,
+    tasks,
+    loading,
+    insertTask,
+    updateTaskList,
+    deleteTaskList,
+  } = useBoardApi(id);
 
+  if (loading) return <Spin />;
+
+  //insert
   const handleAddTask = (listId) => {
     const title = prompt("Enter task title:");
     if (!title) return;
@@ -17,65 +29,35 @@ function BoardPage() {
     const description = prompt("Enter task description:");
     if (!description) return;
 
-    const newTask = {
-      id: "t" + new Date().getTime(),
-      title,
-      description,
-    };
-
-    const updatedLists = boardState.lists.map((list) => {
-      if (list.id === listId) {
-        return {
-          ...list,
-          tasks: [...list.tasks, newTask],
-        };
-      }
-      return list;
-    });
-
-    setBoardState({ ...boardState, lists: updatedLists });
+    insertTask(listId, { title, description });
   };
 
-  const handleEditTask = (listId, taskId) => {
-    const newTitle = prompt("Enter new title");
+  //update
+  const handleEditTask = (listId, task) => {
+    const newTitle = prompt("Enter new title", task.title);
     if (!newTitle) return;
 
-    const newDescription = prompt("Enter new description");
+    const newDescription = prompt("Enter new description", task.description);
     if (!newDescription) return;
 
-    const updatedLists = boardState.lists.map((list) =>
-      list.id === listId
-        ? {
-            ...list,
-            tasks: list.tasks.map((task) =>
-              task.id === taskId
-                ? { ...task, title: newTitle, description: newDescription }
-                : task
-            ),
-          }
-        : list
-    );
-    setBoardState({ ...boardState, lists: updatedLists });
+    updateTaskList(listId, task.id, {
+      ...task,
+      title: newTitle,
+      description: newDescription,
+    });
   };
 
+  //delete
   const handleDeleteTask = (listId, taskId) => {
-    const updatedLists = boardState.lists.map((list) =>
-      list.id === listId
-        ? {
-            ...list,
-            tasks: list.tasks.filter((task) => task.id !== taskId),
-          }
-        : list
-    );
-    setBoardState({ ...boardState, lists: updatedLists });
+    deleteTaskList(listId, taskId);
   };
 
   return (
     <div className="board-page">
-      <h1>{boardState ? boardState.name : "Board not found"}</h1>
-      <p className="board-description">{boardState?.description}</p>
+      <h1>{board ? board.name : "Board not found"}</h1>
+      <p className="board-description">{board?.description}</p>
       <Row gutter={16}>
-        {boardState.lists.map((list) => (
+        {lists.map((list) => (
           <Col xs={24} sm={12} md={6} key={list.id}>
             <Card
               title={<span className="list-title">{list.title}</span>}
@@ -87,7 +69,7 @@ function BoardPage() {
               className="list-card"
               variant="borderless"
             >
-              {list.tasks.map((task) => (
+              {tasks[list.id]?.map((task) => (
                 <Card
                   key={task.id}
                   size="small"
@@ -99,7 +81,7 @@ function BoardPage() {
                   extra={
                     <div className="task-actions">
                       <Button
-                        onClick={() => handleEditTask(list.id, task.id)}
+                        onClick={() => handleEditTask(list.id, task)}
                         color="primary"
                         variant="filled"
                         size="small"
