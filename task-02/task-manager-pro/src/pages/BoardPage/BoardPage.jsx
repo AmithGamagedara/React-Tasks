@@ -1,8 +1,10 @@
 import "./BoardPage.scss";
 import { useParams } from "react-router-dom";
-import { Row, Col, Card, Button, Spin } from "antd";
+import { Row, Col, Card, Button, Spin, Divider, Typography } from "antd";
 import useBoardApi from "../../hooks/useBoardApi";
 // import { boards } from "../../helper/boards";
+
+const { Title, Paragraph } = Typography;
 
 function BoardPage() {
   const { id } = useParams();
@@ -54,8 +56,9 @@ function BoardPage() {
 
   return (
     <div className="board-page">
-      <h1>{board ? board.name : "Board not found"}</h1>
-      <p className="board-description">{board?.description}</p>
+      <Title className="board-title">{board ? board.name : "Board not found"}</Title>
+      <Paragraph className="board-description">{board?.description}</Paragraph>
+      <Divider />
       <Row gutter={16}>
         {lists.map((list) => (
           <Col xs={24} sm={12} md={6} key={list.id}>
