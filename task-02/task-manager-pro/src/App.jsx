@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import BoardPage from "./pages/BoardPage";
+import BoardPage from "./pages/BoardPage/BoardPage";
 import BoardList from "./components/BoardList";
 
 function App() {

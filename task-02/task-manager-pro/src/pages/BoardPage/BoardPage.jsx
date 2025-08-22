@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Row, Col, Card, Button } from "antd";
-import { boards } from "../boards";
+import { boards } from "../../boards";
+import "./BoardPage.scss";
 
 function BoardPage() {
   const { id } = useParams();
@@ -70,58 +71,68 @@ function BoardPage() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>{boardState ? boardState.name : "Board not found"}</h2>
-      <p>{boardState?.description}</p>
+    <div className="board-page">
+      <h1>{boardState ? boardState.name : "Board not found"}</h1>
+      <p className="board-description">{boardState?.description}</p>
       <Row gutter={16}>
         {boardState.lists.map((list) => (
           <Col xs={24} sm={12} md={6} key={list.id}>
             <Card
-              title={list.title}
-              style={{
-                minHeight: "180px",
-                backgroundColor: "#f8f8f8",
-                marginBottom: "24px",
-              }}
+              title={<span className="list-title">{list.title}</span>}
+              // style={{
+              //   minHeight: "180px",
+              //   backgroundColor: "#f8f8f8",
+              //   marginBottom: "24px",
+              // }}
+              className="list-card"
               variant="borderless"
             >
               {list.tasks.map((task) => (
                 <Card
                   key={task.id}
                   size="small"
-                  style={{
-                    marginBottom: "8px",
-                    border: "1px solid #ebebeb",
-                  }}
+                  // style={{
+                  //   marginBottom: "8px",
+                  //   border: "1px solid #ebebeb",
+                  // }}
+                  className="task-card"
                   extra={
-                    <div>
-                      <a onClick={() => handleEditTask(list.id, task.id)}>
+                    <div className="task-actions">
+                      <Button
+                        onClick={() => handleEditTask(list.id, task.id)}
+                        color="primary"
+                        variant="filled"
+                        size="small"
+                      >
                         edit
-                      </a>
-                      <a onClick={() => handleDeleteTask(list.id, task.id)}>
+                      </Button>
+                      {/* <a onClick={() => handleEditTask(list.id, task.id)}>
+                        edit
+                      </a> */}
+                      <Button
+                        onClick={() => handleDeleteTask(list.id, task.id)}
+                        color="danger"
+                        variant="filled"
+                        size="small"
+                        style={{ marginLeft: "6px" }}
+                      >
                         delete
-                      </a>
+                      </Button>
+                      {/* <a onClick={() => handleDeleteTask(list.id, task.id)}>
+                        delete
+                      </a> */}
                     </div>
                   }
                 >
-                  <div style={{ fontSize: "16px", fontWeight: 600 }}>
-                    {" "}
-                    {task.title}
-                  </div>
-                  <div style={{ fontSize: "13px", color: "#666" }}>
-                    {task.description}
-                  </div>
+                  <div className="task-title"> {task.title}</div>
+                  <div className="task-desc ">{task.description}</div>
                 </Card>
               ))}
 
               <Button
                 type="dashed"
                 onClick={() => handleAddTask(list.id)}
-                style={{
-                  marginTop: "16px",
-                  width: "100%",
-                  backgroundColor: "#ececec",
-                }}
+                className="add-task-btn"
               >
                 + Add Task
               </Button>

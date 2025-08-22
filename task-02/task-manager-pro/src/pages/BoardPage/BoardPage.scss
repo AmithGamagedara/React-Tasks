@@ -1,0 +1,51 @@
+.board-page {
+  padding: 20px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  p {
+    margin-bottom: 36px;
+    color: #555;
+  }
+
+  .list-card {
+    min-height: 180px;
+    background-color: #f8f8f8;
+    margin-bottom: 24px;
+
+    .list-title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .task-card {
+      margin-bottom: 8px;
+      border: 1px solid #ebebeb;
+
+      .task-title {
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .task-desc {
+        font-size: 13px;
+        color: #666;
+      }
+
+      .task-actions {
+        display: flex;
+        justify-content: flex-end;
+
+      }
+    }
+
+    .add-task-btn {
+      margin-top: 16px;
+      width: 100%;
+      background-color: #ececec;
+    }
+  }
+}
