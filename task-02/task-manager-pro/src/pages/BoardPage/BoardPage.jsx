@@ -5,6 +5,7 @@ import useBoardApi from "../../hooks/useBoardApi";
 import { useFavorites } from "../../context/useFavorites";
 import TaskList from "../../components/Tasks/TaskList";
 import EditTaskModal from "../../components/Modal/EditTaskModal";
+import AddTaskModal from "../../components/Modal/AddTaskModal";
 import { useState } from "react";
 // import { boards } from "../../helper/boards";
 
@@ -15,10 +16,12 @@ function BoardPage() {
   // const board = boards.find((b) => b.id === id);
   const { favorites, toggleFavorite } = useFavorites();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [currentListId, setCurrentListId] = useState(null);
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [editingListId, setEditingListId] = useState(null);
-  const [addingListId, setAddingListId] = useState(null);
 
   // const [boardState, setBoardState] = useState(board);
   const {
@@ -36,11 +39,9 @@ function BoardPage() {
   //insert
 
   const handleOpenAddModal = (listId) => {
-  setEditingTask(null);  // no existing task
-  setAddingListId(listId);
-  setIsModalOpen(true);
-};
-
+    setCurrentListId(listId);
+    setIsAddModalOpen(true);
+  };
   // const handleAddTask = (listId) => {
   //   const title = prompt("Enter task title:");
   //   if (!title) return;
@@ -51,25 +52,14 @@ function BoardPage() {
   //   insertTask(listId, { title, description });
   // };
 
-
-  
-
   //edit
 
   const handleEditTask = (listId, task) => {
     setEditingTask(task);
     setEditingListId(listId);
-    setIsModalOpen(true);
+    setIsEditModalOpen(true);
   };
 
-  const handleSaveTask = (task) => {
-  if (editingTask) {
-   
-    updateTaskList(editingListId, task.id, task);
-  } else {
-    insertTask(addingListId, task);
-  }
-};
   // const handleEditTask = (listId, task) => {
   //   const newTitle = prompt("Enter new title", task.title);
   //   if (!newTitle) return;
@@ -87,6 +77,14 @@ function BoardPage() {
   //delete
   const handleDeleteTask = (listId, taskId) => {
     deleteTaskList(listId, taskId);
+  };
+
+  const handleSaveAddTask = (task) => {
+    insertTask(currentListId, task);
+  };
+
+  const handleSaveEditTask = (task) => {
+    updateTaskList(editingListId, task.id, task);
   };
 
   return (
@@ -111,11 +109,16 @@ function BoardPage() {
           </Col>
         ))}
       </Row>
+      <AddTaskModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSave={handleSaveAddTask}
+      />
       <EditTaskModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isEditModalOpen}
         task={editingTask}
-        onSave={handleSaveTask}
+        onClose={() => setIsEditModalOpen(false)}
+        onSave={handleSaveEditTask}
       />
     </div>
   );

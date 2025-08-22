@@ -1,27 +1,26 @@
 import { Modal, Form, Input } from "antd";
-import { useEffect } from "react";
 
-function EditTaskModal({ isOpen, onClose, task, onSave }) {
+function AddTaskModal({ isOpen, onClose, onSave }) {
   const [form] = Form.useForm();
-
-  useEffect(() => {
-    if (task) {
-      form.setFieldsValue({
-        title: task.title,
-        description: task.description,
-      });
-    }
-  }, [task, form]);
 
   const handleOk = () => {
     form.validateFields().then((values) => {
-      onSave({ ...task, ...values });
+      onSave({ id: "t" + Date.now(), ...values });
+      form.resetFields();
       onClose();
     });
   };
 
   return (
-    <Modal title="Edit Task" open={isOpen} onOk={handleOk} onCancel={onClose}>
+    <Modal
+      title="Add New Task"
+      open={isOpen}
+      onOk={handleOk}
+      onCancel={() => {
+        form.resetFields();
+        onClose();
+      }}
+    >
       <Form form={form} layout="vertical">
         <Form.Item
           name="title"
@@ -38,4 +37,4 @@ function EditTaskModal({ isOpen, onClose, task, onSave }) {
   );
 }
 
-export default EditTaskModal;
+export default AddTaskModal;
