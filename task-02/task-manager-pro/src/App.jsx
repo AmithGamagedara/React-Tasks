@@ -1,16 +1,13 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import BoardPage from "./pages/BoardPage/BoardPage";
-import BoardList from "./components/BoardList";
+import { BrowserRouter } from "react-router-dom";
+import RoutesPage from "./routes/routes";
+import Header from "./components/Header/Header";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/boards" replace />} />
-        <Route path="/boards" element={<BoardList />} />
-        <Route path="/boards/:id" element={<BoardPage />} />
-      </Routes>
+      <Header />
+      <RoutesPage />
     </BrowserRouter>
   );
 }

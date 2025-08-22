@@ -1,13 +1,14 @@
 .board-page {
   padding: 20px;
 
-  h2 {
-    font-size: 24px;
+  .board-title {
+    font-size: 28px;
     font-weight: bold;
   }
 
-  p {
-    margin-bottom: 36px;
+  .board-description {
+    margin-top: -8px;
+    margin-bottom: 16px;
     color: #555;
   }
 
