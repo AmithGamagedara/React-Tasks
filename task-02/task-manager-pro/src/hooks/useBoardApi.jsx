@@ -15,51 +15,73 @@ function useBoardApi(boardId) {
   useEffect(() => {
     if (!boardId) return;
 
-    dispatch({ type: "SET_LOADING", payload: true });
+    const fetchData = async () => {
+      dispatch({ type: "SET_LOADING", payload: true }); 
+      dispatch({ type: "SET_ERROR", payload: null });   
 
-    //board fetch
-    getBoard(boardId).then((res) =>
-      dispatch({ type: "SET_BOARD", payload: res.data })
-    );
+      try {
+        // Fetch board
+        const boardRes = await getBoard(boardId);
+        dispatch({ type: "SET_BOARD", payload: boardRes.data });
 
-    //lists n tasks fetch
-    getLists(boardId).then((res) => {
-      dispatch({ type: "SET_LISTS", payload: res.data });
-      // Fetch tasks for each list
+        // Fetch lists
+        const listRes = await getLists(boardId);
+        dispatch({ type: "SET_LISTS", payload: listRes.data });
 
-      Promise.all(
-        res.data.map((list) =>
-          getTasks(list.id).then((taskRes) => [list.id, taskRes.data])
-        )
-      ).then((taskEntries) => {
+
+        const taskEntries = await Promise.all(
+          listRes.data.map((list) =>
+            getTasks(list.id).then((taskRes) => [list.id, taskRes.data])
+          )
+        );
+
         const tasksObj = {};
         taskEntries.forEach(([listId, tasks]) => {
           tasksObj[listId] = tasks;
         });
         dispatch({ type: "SET_TASKS", payload: tasksObj });
-      });
-    });
+
+      } catch (err) {
+        dispatch({ type: "SET_ERROR", payload: err.message || "Something went wrong" });
+      } finally {
+        dispatch({ type: "SET_LOADING", payload: false });
+      }
+    };
+
+    fetchData();
   }, [boardId]);
 
-  // Add a new task to list
+  // Add new task to list
   const insertTask = async (listId, taskData) => {
-    const res = await addTask({ ...taskData, listId });
-    dispatch({ type: "ADD_TASK", payload: { listId, task: res.data } });
+    try {
+      const res = await addTask({ ...taskData, listId });
+      dispatch({ type: "ADD_TASK", payload: { listId, task: res.data } });
+    } catch (err) {
+      dispatch({ type: "SET_ERROR", payload: err.message });
+    }
   };
 
-  // Update a task in list
+  // Update task in list
   const updateTaskList = async (listId, taskId, updatedData) => {
-    const res = await updateTask(taskId, updatedData);
-    dispatch({
-      type: "UPDATE_TASK",
-      payload: { listId, taskId, updatedTask: res.data },
-    });
+    try {
+      const res = await updateTask(taskId, updatedData);
+      dispatch({
+        type: "UPDATE_TASK",
+        payload: { listId, taskId, updatedTask: res.data },
+      });
+    } catch (err) {
+      dispatch({ type: "SET_ERROR", payload: err.message });
+    }
   };
 
-  // Delete a task from list
+  // Delete task from list
   const deleteTaskList = async (listId, taskId) => {
-    await deleteTask(taskId);
-    dispatch({ type: "DELETE_TASK", payload: { listId, taskId } });
+    try {
+      await deleteTask(taskId);
+      dispatch({ type: "DELETE_TASK", payload: { listId, taskId } });
+    } catch (err) {
+      dispatch({ type: "SET_ERROR", payload: err.message });
+    }
   };
 
   return {

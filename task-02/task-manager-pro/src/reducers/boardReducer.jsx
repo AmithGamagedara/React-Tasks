@@ -2,7 +2,8 @@ export const initialState = {
   board: null,
   lists: [],
   tasks: {},
-  loading: true,
+  loading: false,
+  error: null,
 };
 
 export function boardReducer(state, action) {
@@ -53,6 +54,9 @@ export function boardReducer(state, action) {
 
     case "SET_LOADING":
       return { ...state, loading: action.payload };
+
+    case "SET_ERROR":
+      return { ...state, error: action.payload };
     default:
       return state;
   }
