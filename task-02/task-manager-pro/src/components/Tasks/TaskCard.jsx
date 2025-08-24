@@ -15,6 +15,7 @@ function TaskCard({
       key={task.id}
       size="small"
       className="task-card"
+      style={{cursor: "pointer"}}
       extra={
         <div className="task-actions">
           <span
